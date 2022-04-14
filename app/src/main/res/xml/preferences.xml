@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:iconSpaceReserved="false">
+
+    <PreferenceCategory
+        android:title="@string/updates_settings"
+        app:iconSpaceReserved="false">
+
+        <ListPreference
+            android:dialogTitle="@string/flavour_dialog_title"
+            android:entries="@array/flavour_setting_entries"
+            android:entryValues="@array/flavour_setting_entry_values"
+            android:key="flavour"
+            android:summary="@string/flavour_setting_summary"
+            android:title="@string/flavour_setting_title"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreference
+            android:key="pre_releases"
+            android:summary="@string/pre_release_setting_summary"
+            android:title="@string/pre_release_setting_title"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

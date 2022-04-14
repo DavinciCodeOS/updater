@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="flavour_setting_entries">
+        <item>DavinciCodeOS</item>
+        <item>DavinciCodeOSX</item>
+    </string-array>
+
+    <string-array name="flavour_setting_entry_values">
+        <item>dcos</item>
+        <item>dcosx</item>
+    </string-array>
+</resources>
