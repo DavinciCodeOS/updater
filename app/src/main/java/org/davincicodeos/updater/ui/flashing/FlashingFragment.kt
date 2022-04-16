@@ -6,37 +6,109 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import org.davincicodeos.updater.databinding.FragmentFlashingBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter
+import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange
+import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager
+import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder
+import org.davincicodeos.updater.R
+
 
 class FlashingFragment : Fragment() {
-
-    private var _binding: FragmentFlashingBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val flashingViewModel =
-            ViewModelProvider(this).get(FlashingViewModel::class.java)
-
-        _binding = FragmentFlashingBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textDashboard
-        flashingViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+        return inflater.inflate(R.layout.fragment_flashing, container, false)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+
+        val layoutManager = LinearLayoutManager(requireContext())
+
+        // Drag & Drop manager
+        val recyclerViewDragDropManager = RecyclerViewDragDropManager()
+        // recyclerViewDragDropManager.setDraggingItemShadowDrawable(ContextCompat.getDrawable(view.context, R.drawable.material_shadow_z3) as NinePatchDrawable)
+        recyclerViewDragDropManager.setInitiateOnLongPress(true)
+        recyclerViewDragDropManager.setInitiateOnMove(false)
+
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = recyclerViewDragDropManager.createWrappedAdapter(MyAdapter())
+
+        recyclerViewDragDropManager.attachRecyclerView(recyclerView)
+    }
+
+
+    internal class MyItem(val id: Long, val text: String)
+
+
+    internal class MyViewHolder(itemView: View) :
+        AbstractDraggableItemViewHolder(itemView) {
+        var textView: TextView = itemView.findViewById(android.R.id.text1)
+
+    }
+
+    internal class MyAdapter : RecyclerView.Adapter<MyViewHolder>(),
+        DraggableItemAdapter<MyViewHolder> {
+        var mItems: MutableList<MyItem>
+        override fun getItemId(position: Int): Long {
+            return mItems[position].id // need to return stable (= not change even after reordered) value
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val v: View = LayoutInflater.from(parent.context)
+                .inflate(R.layout.flashing_list_item, parent, false)
+            return MyViewHolder(v)
+        }
+
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            val item = mItems[position]
+            holder.textView.text = item.text
+        }
+
+        override fun getItemCount(): Int {
+            return mItems.size
+        }
+
+        override fun onMoveItem(fromPosition: Int, toPosition: Int) {
+            val movedItem = mItems.removeAt(fromPosition)
+            mItems.add(toPosition, movedItem)
+        }
+
+        override fun onCheckCanStartDrag(
+            holder: MyViewHolder,
+            position: Int,
+            x: Int,
+            y: Int
+        ): Boolean {
+            return true
+        }
+
+        override fun onGetItemDraggableRange(
+            holder: MyViewHolder,
+            position: Int
+        ): ItemDraggableRange? {
+            return null
+        }
+
+        override fun onCheckCanDrop(draggingPosition: Int, dropPosition: Int): Boolean {
+            return true
+        }
+
+        override fun onItemDragStarted(position: Int) {}
+        override fun onItemDragFinished(fromPosition: Int, toPosition: Int, result: Boolean) {}
+
+        init {
+            setHasStableIds(true) // this is required for D&D feature.
+            mItems = ArrayList()
+            for (i in 0..19) {
+                mItems.add(MyItem(i.toLong(), "Item $i"))
+            }
+        }
     }
 }

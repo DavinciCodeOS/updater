@@ -37,22 +37,22 @@ object SystemProperties {
 
 
 object Utils {
-    private val propBuildVersionDisplay = "org.pixelexperience.version.display";
-    private val dcosxBuildName = "DavinciCodeOSX";
+    private val propBuildVersionDisplay = "org.pixelexperience.version.display"
+    private val dcosxBuildName = "DavinciCodeOSX"
 
     fun getCurrentFlavour(): String {
-        val buildVersionDisplay = SystemProperties.getProp(propBuildVersionDisplay, "");
+        val buildVersionDisplay = SystemProperties.getProp(propBuildVersionDisplay, "")
 
         if (buildVersionDisplay == "") {
             // Fallback, always use dcos in case of doubt
-            return "dcos";
+            return "dcos"
         } else {
-            val osNamePretty = buildVersionDisplay.split("_")[0];
+            val osNamePretty = buildVersionDisplay.split("_")[0]
 
             if (osNamePretty == dcosxBuildName) {
-                return "dcosx";
+                return "dcosx"
             } else {
-                return "dcos";
+                return "dcos"
             }
         }
     }
