@@ -11,4 +11,6 @@
     <string name="flavour_setting_summary">OS flavour to install updates for</string>
     <string name="flavour_dialog_title">Choose a flavour</string>
     <string name="flavour_setting_default">dcos</string>
+
+    <string name="add_zip_button_desc">Add a ZIP</string>
 </resources>

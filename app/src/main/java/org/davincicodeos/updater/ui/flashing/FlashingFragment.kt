@@ -1,6 +1,7 @@
 package org.davincicodeos.updater.ui.flashing
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,14 +9,23 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder
+import org.davincicodeos.updater.FileSelectionEntryPoint
 import org.davincicodeos.updater.R
+import org.davincicodeos.updater.SelectFileParams
+import org.davincicodeos.updater.StorageAccessFrameworkInteractor
+import java.io.FileDescriptor
 
 
-class FlashingFragment : Fragment() {
+class FlashingFragment : Fragment(), FileSelectionEntryPoint {
+    override val fileSelectionOwner = this
+    private val fileSelectionInteractor: StorageAccessFrameworkInteractor =
+        StorageAccessFrameworkInteractor(this)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,8 +51,23 @@ class FlashingFragment : Fragment() {
         recyclerView.adapter = recyclerViewDragDropManager.createWrappedAdapter(MyAdapter())
 
         recyclerViewDragDropManager.attachRecyclerView(recyclerView)
+
+        // Make the file selection button work
+        val addButton = view.findViewById<FloatingActionButton>(R.id.addButton)
+
+        addButton.setOnClickListener {
+            val params = SelectFileParams("application/zip")
+            fileSelectionInteractor.beginSelectingFile(params)
+        }
     }
 
+    override fun onFileSelected(fileDescriptor: FileDescriptor?) {
+        if (fileDescriptor == null) {
+            Log.i("ZipSelectorCallback", "No file selected")
+        } else {
+            Log.i("ZipSelectorCallback", "Got a zip")
+        }
+    }
 
     internal class MyItem(val id: Long, val text: String)
 
