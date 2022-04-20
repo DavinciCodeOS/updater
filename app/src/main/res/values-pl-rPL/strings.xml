@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aktualizator</string>
+    <string name="title_updates">Aktualizacje</string>
+    <string name="title_settings">Ustawienia</string>
+    <string name="updates_settings">Aktualizacje</string>
+    <string name="add_zip_button_desc">Dodaj plik ZIP</string>
+    <string name="title_flashing">Flashowanie</string>
+    <string name="pre_release_setting_title">Instaluj niestabilne wersje testowe</string>
+    <string name="pre_release_setting_summary">Mogą być niestabilne, zepsute oraz doprowadzić do utraty danych, włączaj  na własne ryzyko</string>
+    <string name="flavour_setting_title">Wariant</string>
+    <string name="flavour_setting_summary">Wariant systemu, który będzie instalowany w ramach aktualizacji</string>
+    <string name="flavour_dialog_title">Wybierz wariant</string>
+    <string name="flavour_setting_default">dcos</string>
+    <string name="downloads_settings">Pobieranie</string>
+    <string name="download_over_data_setting_title">Pobieraj aktualizacje używając danych mobilnych</string>
+    <string name="force_dirty_always_setting_title">Wymuś dirty flash</string>
+    <string name="remove">Usuń</string>
+    <string name="download_over_data_setting_summary">Jeśli jest wyłączone, używane będzie tylko Wi-Fi</string>
+    <string name="force_dirty_always_setting_summary">Umożliwi to dirty flashing (flashowanie bez formatowania telefonu) przy aktualizacjach, które wymaga czystego flashowania (używaj ostrożnie)</string>
+</resources>
