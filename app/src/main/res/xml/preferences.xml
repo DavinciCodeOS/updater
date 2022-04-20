@@ -22,6 +22,24 @@
             android:title="@string/pre_release_setting_title"
             app:iconSpaceReserved="false" />
 
+        <SwitchPreference
+            android:key="force_dirty_always"
+            android:summary="@string/force_dirty_always_setting_summary"
+            android:title="@string/force_dirty_always_setting_title"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/downloads_settings"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreference
+            android:key="download_over_data"
+            android:summary="@string/download_over_data_setting_summary"
+            android:title="@string/download_over_data_setting_title"
+            app:iconSpaceReserved="false" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

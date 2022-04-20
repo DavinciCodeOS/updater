@@ -5,12 +5,21 @@
     <string name="title_settings">Settings</string>
 
     <string name="updates_settings">Updates</string>
-    <string name="pre_release_setting_title">Install unstable pre-releases</string>
-    <string name="pre_release_setting_summary">Might break and cause data loss, enable at your own risk</string>
+
     <string name="flavour_setting_title">Flavour</string>
     <string name="flavour_setting_summary">OS flavour to install updates for</string>
     <string name="flavour_dialog_title">Choose a flavour</string>
     <string name="flavour_setting_default">dcos</string>
+
+    <string name="pre_release_setting_title">Install unstable pre-releases</string>
+    <string name="pre_release_setting_summary">Might break and cause data loss, enable at your own risk</string>
+
+    <string name="force_dirty_always_setting_title">Force dirty flashing</string>
+    <string name="force_dirty_always_setting_summary">This will allow dirty flashing releases that require clean flashing (use with caution)</string>
+
+    <string name="downloads_settings">Downloads</string>
+    <string name="download_over_data_setting_title">Download over mobile data</string>
+    <string name="download_over_data_setting_summary">Unless enabled, only WiFi will be used</string>
 
     <string name="add_zip_button_desc">Add a ZIP</string>
 </resources>
