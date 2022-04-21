@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -75,12 +76,13 @@ class FlashingFragment : Fragment(), FileSelectionEntryPoint {
     internal class MyViewHolder(itemView: View) :
         AbstractDraggableItemViewHolder(itemView) {
         var textView: TextView = itemView.findViewById(android.R.id.text1)
+        var removeButton: Button = itemView.findViewById(android.R.id.button1)
 
     }
 
     internal class MyAdapter : RecyclerView.Adapter<MyViewHolder>(),
         DraggableItemAdapter<MyViewHolder> {
-        var mItems: MutableList<MyItem>
+        private var mItems: MutableList<MyItem>
         override fun getItemId(position: Int): Long {
             return mItems[position].id // need to return stable (= not change even after reordered) value
         }
@@ -94,6 +96,10 @@ class FlashingFragment : Fragment(), FileSelectionEntryPoint {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val item = mItems[position]
             holder.textView.text = item.text
+            holder.removeButton.setOnClickListener {
+                mItems.remove(item)
+                notifyItemRemoved(holder.adapterPosition)
+            }
         }
 
         override fun getItemCount(): Int {
