@@ -7,6 +7,7 @@ import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.fragment.app.Fragment
+import java.io.File
 import java.io.FileDescriptor
 
 data class SelectFileParams(
@@ -16,7 +17,7 @@ data class SelectFileParams(
 interface FileSelectionEntryPoint {
     val fileSelectionOwner: Fragment
 
-    fun onFileSelected(fileDescriptor: FileDescriptor?)
+    fun onFileSelected(fileName: String?, fileDescriptor: FileDescriptor?)
 }
 
 class SelectFileResultContract : ActivityResultContract<SelectFileParams, Uri?>() {
@@ -44,14 +45,18 @@ class StorageAccessFrameworkInteractor(private val fileSelectionEntryPoint: File
         selectFileLauncher.launch(selectFileParams)
 
     private fun onFileSelectionFinished(fileUri: Uri?) {
-        val fileDescriptor = fileUri?.let { uri ->
+        val fileName = fileUri?.path?.let {
+            val path = it.replace("/document/primary:", "/storage/emulated/0/")
+            File(path).name
+        }
+        val fileDescriptor = fileUri?.let {
             fileSelectionEntryPoint.fileSelectionOwner
                 .requireContext()
                 .contentResolver
-                .openFileDescriptor(uri, "r")
+                .openFileDescriptor(it, "r")
                 ?.fileDescriptor
         }
 
-        fileSelectionEntryPoint.onFileSelected(fileDescriptor)
+        fileSelectionEntryPoint.onFileSelected(fileName, fileDescriptor)
     }
 }

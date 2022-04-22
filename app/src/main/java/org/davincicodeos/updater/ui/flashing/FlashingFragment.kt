@@ -1,5 +1,6 @@
 package org.davincicodeos.updater.ui.flashing
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,11 +16,10 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder
-import org.davincicodeos.updater.FileSelectionEntryPoint
-import org.davincicodeos.updater.R
-import org.davincicodeos.updater.SelectFileParams
-import org.davincicodeos.updater.StorageAccessFrameworkInteractor
+import org.davincicodeos.updater.*
 import java.io.FileDescriptor
+import java.nio.file.Path
+import kotlin.io.path.name
 
 
 class FlashingFragment : Fragment(), FileSelectionEntryPoint {
@@ -37,7 +37,7 @@ class FlashingFragment : Fragment(), FileSelectionEntryPoint {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
 
         val layoutManager = LinearLayoutManager(requireContext())
@@ -49,7 +49,8 @@ class FlashingFragment : Fragment(), FileSelectionEntryPoint {
         recyclerViewDragDropManager.setInitiateOnMove(false)
 
         recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = recyclerViewDragDropManager.createWrappedAdapter(MyAdapter())
+        recyclerView.adapter =
+            recyclerViewDragDropManager.createWrappedAdapter(MyAdapter(requireContext()))
 
         recyclerViewDragDropManager.attachRecyclerView(recyclerView)
 
@@ -62,15 +63,16 @@ class FlashingFragment : Fragment(), FileSelectionEntryPoint {
         }
     }
 
-    override fun onFileSelected(fileDescriptor: FileDescriptor?) {
-        if (fileDescriptor == null) {
+    override fun onFileSelected(fileName: String?, fileDescriptor: FileDescriptor?) {
+        if (fileDescriptor == null || fileName == null) {
             Log.i("ZipSelectorCallback", "No file selected")
         } else {
-            Log.i("ZipSelectorCallback", "Got a zip")
+            DataManager.createFileAndCopyFromFd(requireContext(), fileName, fileDescriptor)
+            // TODO: Reload adapter items
         }
     }
 
-    internal class MyItem(val id: Long, val text: String)
+    internal class FlashableItem(val path: Path, val name: String)
 
 
     internal class MyViewHolder(itemView: View) :
@@ -80,11 +82,14 @@ class FlashingFragment : Fragment(), FileSelectionEntryPoint {
 
     }
 
-    internal class MyAdapter : RecyclerView.Adapter<MyViewHolder>(),
+    internal class MyAdapter(private val context: Context) : RecyclerView.Adapter<MyViewHolder>(),
         DraggableItemAdapter<MyViewHolder> {
-        private var mItems: MutableList<MyItem>
+        private lateinit var mItems: MutableList<FlashableItem>
+
         override fun getItemId(position: Int): Long {
-            return mItems[position].id // need to return stable (= not change even after reordered) value
+            // need to return stable (= not change even after reordered) value
+            // TODO: store an ID for each one one adding and save order
+            return mItems[position].name.hashCode().toLong()
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -95,8 +100,10 @@ class FlashingFragment : Fragment(), FileSelectionEntryPoint {
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val item = mItems[position]
-            holder.textView.text = item.text
+            holder.textView.text = item.name
+
             holder.removeButton.setOnClickListener {
+                DataManager.deleteFile(context, item.name)
                 mItems.remove(item)
                 notifyItemRemoved(holder.adapterPosition)
             }
@@ -134,12 +141,17 @@ class FlashingFragment : Fragment(), FileSelectionEntryPoint {
         override fun onItemDragStarted(position: Int) {}
         override fun onItemDragFinished(fromPosition: Int, toPosition: Int, result: Boolean) {}
 
+        private fun reloadItems() {
+            mItems = ArrayList()
+
+            DataManager.getFiles(context).forEach { file ->
+                mItems.add(FlashableItem(file, file.name))
+            }
+        }
+
         init {
             setHasStableIds(true) // this is required for D&D feature.
-            mItems = ArrayList()
-            for (i in 0..19) {
-                mItems.add(MyItem(i.toLong(), "Item $i"))
-            }
+            reloadItems()
         }
     }
 }

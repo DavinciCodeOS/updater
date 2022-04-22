@@ -12,10 +12,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         // Now set a dynamic default for the OS flavour, since that is only
         // known at run-time
-        val flavourPreference = findPreference<ListPreference>("flavour");
+        val flavourPreference = findPreference<ListPreference>("flavour")
 
         if (flavourPreference != null && flavourPreference.value == null) {
-            flavourPreference.value = Utils.getCurrentFlavour();
+            flavourPreference.value = Utils.getCurrentFlavour()
         }
     }
 }
