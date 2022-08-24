@@ -1,5 +1,6 @@
 package org.davincicodeos.updater.ui.flashing
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -26,6 +27,7 @@ class FlashingFragment : Fragment(), FileSelectionEntryPoint {
     override val fileSelectionOwner = this
     private val fileSelectionInteractor: StorageAccessFrameworkInteractor =
         StorageAccessFrameworkInteractor(this)
+    private lateinit var adapter: MyAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,8 +51,9 @@ class FlashingFragment : Fragment(), FileSelectionEntryPoint {
         recyclerViewDragDropManager.setInitiateOnMove(false)
 
         recyclerView.layoutManager = layoutManager
+        this.adapter = MyAdapter(requireContext())
         recyclerView.adapter =
-            recyclerViewDragDropManager.createWrappedAdapter(MyAdapter(requireContext()))
+            recyclerViewDragDropManager.createWrappedAdapter(this.adapter)
 
         recyclerViewDragDropManager.attachRecyclerView(recyclerView)
 
@@ -63,12 +66,14 @@ class FlashingFragment : Fragment(), FileSelectionEntryPoint {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onFileSelected(fileName: String?, fileDescriptor: FileDescriptor?) {
         if (fileDescriptor == null || fileName == null) {
             Log.i("ZipSelectorCallback", "No file selected")
         } else {
             DataManager.createFileAndCopyFromFd(requireContext(), fileName, fileDescriptor)
-            // TODO: Reload adapter items
+            this.adapter.reloadItems()
+            this.adapter.notifyDataSetChanged()
         }
     }
 
@@ -140,7 +145,7 @@ class FlashingFragment : Fragment(), FileSelectionEntryPoint {
         override fun onItemDragStarted(position: Int) {}
         override fun onItemDragFinished(fromPosition: Int, toPosition: Int, result: Boolean) {}
 
-        private fun reloadItems() {
+        fun reloadItems() {
             mItems = ArrayList()
 
             DataManager.getFiles(context).forEach { file ->

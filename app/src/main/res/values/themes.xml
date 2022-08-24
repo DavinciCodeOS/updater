@@ -28,11 +28,6 @@
         <item name="colorPrimaryInverse">@color/md_theme_light_primaryInverse</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
 
-        <item name="preferenceTheme">@style/Theme.Updater.Settings</item>
-    </style>
-
-    <!-- Settings activity theme. -->
-    <style name="Theme.Updater.Settings" parent="Theme.Updater">
         <item name="android:switchStyle">@style/Theme.Updater.Settings.Switch</item>
     </style>
 

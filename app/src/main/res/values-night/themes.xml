@@ -27,7 +27,5 @@
         <item name="colorSurfaceInverse">@color/md_theme_dark_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_dark_primaryInverse</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-
-        <item name="preferenceTheme">@style/Theme.Updater.Settings</item>
     </style>
 </resources>
