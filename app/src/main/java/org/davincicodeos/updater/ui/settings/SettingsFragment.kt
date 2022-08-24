@@ -29,8 +29,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val contextThemeWrapper: Context = ContextThemeWrapper(requireContext(), R.style.Theme_Updater_Settings)
-        val themedInflater = inflater.cloneInContext(contextThemeWrapper)
-        return super.onCreateView(themedInflater, container, savedInstanceState)
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+        requireContext().theme.applyStyle(R.style.Theme_Updater_Settings, true)
+        return view
     }
 }

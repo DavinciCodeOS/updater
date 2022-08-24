@@ -79,7 +79,6 @@ class FlashingFragment : Fragment(), FileSelectionEntryPoint {
         AbstractDraggableItemViewHolder(itemView) {
         var textView: TextView = itemView.findViewById(android.R.id.text1)
         var removeButton: Button = itemView.findViewById(android.R.id.button1)
-
     }
 
     internal class MyAdapter(private val context: Context) : RecyclerView.Adapter<MyViewHolder>(),
