@@ -1,6 +1,11 @@
 package org.davincicodeos.updater.ui.settings
 
+import android.content.Context
 import android.os.Bundle
+import android.view.ContextThemeWrapper
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import org.davincicodeos.updater.R
@@ -17,5 +22,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
         if (flavourPreference != null && flavourPreference.value == null) {
             flavourPreference.value = Utils.getCurrentFlavour()
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val contextThemeWrapper: Context = ContextThemeWrapper(requireContext(), R.style.Theme_Updater_Settings)
+        val themedInflater = inflater.cloneInContext(contextThemeWrapper)
+        return super.onCreateView(themedInflater, container, savedInstanceState)
     }
 }

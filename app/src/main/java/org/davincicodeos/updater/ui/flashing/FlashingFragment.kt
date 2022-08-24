@@ -37,7 +37,7 @@ class FlashingFragment : Fragment(), FileSelectionEntryPoint {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
+
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
 
         val layoutManager = LinearLayoutManager(requireContext())
