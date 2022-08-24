@@ -22,10 +22,10 @@ interface FileSelectionEntryPoint {
 
 class SelectFileResultContract : ActivityResultContract<SelectFileParams, Uri?>() {
 
-    override fun createIntent(context: Context, data: SelectFileParams): Intent =
+    override fun createIntent(context: Context, input: SelectFileParams): Intent =
         Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
-            setTypeAndNormalize(data.fileMimeType)
+            setTypeAndNormalize(input.fileMimeType)
         }
 
     override fun parseResult(resultCode: Int, intent: Intent?): Uri? = when (resultCode) {
